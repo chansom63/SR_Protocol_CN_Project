@@ -1,0 +1,138 @@
+
+.receiver-labels {
+    right: 20px;
+}
+
+.packet-label {
+    padding: 5px 10px;
+    background-color: rgba(0, 0, 0, 0.7);
+    border-radius: 4px;
+    white-space: nowrap;
+}
+
+.packet-label.received {
+    color: #4CAF50;
+}
+
+.packet-label.lost {
+    color: #f44336;
+}
+
+.status-panel {
+    background-color: rgba(255, 255, 255, 0.1);
+    padding: 20px;
+    border-radius: 10px;
+    backdrop-filter: blur(10px);
+    width: 300px;
+    display: flex;
+    flex-direction: column;
+}
+
+.status-messages {
+    flex-grow: 1;
+    overflow-y: auto;
+    margin-top: 10px;
+    font-family: monospace;
+    font-size: 14px;
+    color: #fff;
+    max-height: calc(100vh - 100px);
+    display: flex;
+    flex-direction: column;
+}
+
+.status-messages div {
+    padding: 5px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.status-messages .simulation-start {
+    color: #4CAF50;
+    font-weight: bold;
+    font-size: 16px;
+    background-color: rgba(76, 175, 80, 0.1);
+    border-radius: 4px;
+    margin-bottom: 10px;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+}
+
+.packet-label.failed {
+    color: #ff4444;
+    text-decoration: line-through;
+}
+
+.status-messages::-webkit-scrollbar {
+    width: 8px;
+}
+
+.status-messages::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+}
+
+.status-messages::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 4px;
+}
+
+.status-messages::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.4);
+}
+
+h2 {
+    margin-bottom: 20px;
+    color: #fff;
+    font-size: 1.5em;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.speed-control {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.speed-control span {
+    font-size: 12px;
+    color: #fff;
+    opacity: 0.8;
+}
+
+.speed-control input[type="range"] {
+    flex: 1;
+    -webkit-appearance: none;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 2px;
+    outline: none;
+}
+
+.speed-control input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 16px;
+    height: 16px;
+    background: #4CAF50;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.speed-control input[type="range"]::-webkit-slider-thumb:hover {
+    background: #45a049;
+}
+
+.speed-control input[type="range"]::-moz-range-thumb {
+    width: 16px;
+    height: 16px;
+    background: #4CAF50;
+    border-radius: 50%;
+    cursor: pointer;
+    border: none;
+    transition: background 0.3s;
+}
+
+.speed-control input[type="range"]::-moz-range-thumb:hover {
+    background: #45a049;
+} 
