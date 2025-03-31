@@ -136,8 +136,6 @@ function togglePause() {
     const pauseButton = document.getElementById('pauseSimulation');
     pauseButton.textContent = simulationPaused ? 'Resume' : 'Pause';
     pauseButton.classList.toggle('paused');
-<<<<<<< HEAD
+
 } 
-=======
-} 
->>>>>>> 4a060b1a5c80c9000d6ebd77b30565419da3c443
+
