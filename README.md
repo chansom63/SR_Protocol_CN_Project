@@ -12,6 +12,9 @@ The Selective Repeat (SR) Protocol is a sliding window protocol used in computer
 - **Error Recovery**: Only lost or corrupted packets are retransmitted, improving efficiency
 - **Out-of-Order Handling**: Can accept packets that arrive out of sequence, storing them in a buffer
 
+## Website link
+- https://chansom63.github.io/SR_Protocol_CN_Project/
+  <br/>
 ## Softwares Required
 -  **Opeating System:** Microsoft Windows
 -  **Version Control system:** Git / Github
