@@ -29,7 +29,7 @@ The Selective Repeat (SR) Protocol is a sliding window protocol used in computer
   run the application
   The drive link is "https://drive.google.com/file/d/1No7gPdijG-ImznvpMEtHQqPklRasqdqx/view?usp=sharing"
 
-
+<br/>
   
 ```
 Key Advantages:
