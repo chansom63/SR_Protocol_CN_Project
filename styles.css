@@ -1,0 +1,365 @@
+
+body {
+    margin: 0;
+    padding: 0px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #1a1a1a;
+    color: white;
+    font-family: Arial, sans-serif;
+}
+
+canvas {
+    border: 2px solid #333;
+    background-color: #000;
+    margin: 20px;
+}
+
+.controls {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 15rem;
+    /* height: 500px; */
+    margin: 0;
+    padding: 15px;
+    background-color: rgba(51, 51, 51, 0.5);
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    border: 1px solid #444;
+    overflow-y: auto;
+    z-index: 1000;
+}
+
+.controls::-webkit-scrollbar {
+    width: 8px;
+}
+
+.controls::-webkit-scrollbar-track {
+    background: #222;
+    border-radius: 4px;
+}
+
+.controls::-webkit-scrollbar-thumb {
+    background: #666;
+    border-radius: 4px;
+}
+
+.controls::-webkit-scrollbar-thumb:hover {
+    background: #888;
+}
+
+.controls>div {
+    margin-bottom: 0;
+    padding: 0;
+    background-color: transparent;
+    border: none;
+}
+
+.controls label {
+    display: block;
+    margin-bottom: 5px;
+    color: #4CAF50;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.controls input {
+    width: 100%;
+    box-sizing: border-box;
+    background-color: transparent;
+    color: white;
+    border: none;
+    border-bottom: 1px solid #555;
+    margin-bottom: 10px;
+    padding: 5px;
+    font-size: 12px;
+}
+
+.controls input:focus {
+    outline: none;
+    border-color: #4CAF50;
+}
+
+.button-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.button-group button {
+    width: 100%;
+    padding: 8px;
+    font-size: 12px;
+}
+
+.slider-container {
+    margin-top: 15px;
+}
+
+button {
+    padding: 10px 20px;
+    margin: 5px;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+button:hover {
+    opacity: 0.9;
+}
+
+button:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+}
+
+#startBtn {
+    background-color: #4CAF50;
+    /* Green */
+}
+
+#pauseBtn {
+    background-color: #2196F3;
+    /* Blue */
+}
+
+#resetBtn {
+    background-color: #FF9800;
+    /* Orange */
+}
+
+input {
+    padding: 8px;
+    margin: 5px;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+}
+
+.slider-label {
+    margin-right: 10px;
+    min-width: 120px;
+}
+
+.slider {
+    flex-grow: 1;
+    height: 1px;
+    /* Very thin slider like a needle */
+    -webkit-appearance: none;
+    appearance: none;
+    background: #000;
+    /* Black background */
+    outline: none;
+    border: none;
+}
+
+.slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: #FFFFFF;
+    /* White thumb */
+    cursor: pointer;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+}
+
+.slider::-moz-range-thumb {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: #FFFFFF;
+    /* White thumb */
+    cursor: pointer;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+}
+
+.slider-value {
+    display: none;
+    /* Hide the range numbers */
+}
+
+.status-window {
+    position: fixed;
+    right: 0;
+    top: 0px;
+    width: 15rem;
+    height: 100vh;
+    padding: 15px;
+    background-color: rgba(51, 51, 51, 0.5);
+    border-radius: 8px;
+    color: white;
+    font-family: monospace;
+    overflow-y: auto;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    border: 1px solid #444;
+    z-index: 1000;
+}
+
+.status-window::-webkit-scrollbar {
+    width: 8px;
+}
+
+.status-window::-webkit-scrollbar-track {
+    background: #222;
+    border-radius: 4px;
+}
+
+.status-window::-webkit-scrollbar-thumb {
+    background: #666;
+    border-radius: 4px;
+}
+
+.status-window::-webkit-scrollbar-thumb:hover {
+    background: #888;
+}
+
+.status-section {
+    position: relative;
+    min-height: 100%;
+    margin-bottom: 0;
+    padding: 0;
+    background-color: transparent;
+    border-radius: 6px;
+    border: none;
+}
+
+.receiver-section {
+    position: relative;
+    min-height: 100%;
+    margin-top: 20px;
+    padding: 0;
+    background-color: transparent;
+    border-radius: 6px;
+    border: none;
+}
+
+.status-title {
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #4CAF50;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.status-item {
+    margin: 0;
+    padding: 8px;
+    background-color: transparent;
+    border-radius: 4px;
+    font-size: 12px;
+    transition: all 0.3s ease;
+    border-left: 3px solid;
+    height: 30px;
+    line-height: 30px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    position: absolute;
+    width: 100%;
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.status-item:hover {
+    transform: translateX(5px);
+    background-color: #555;
+}
+
+.status-item.success {
+    color: #4CAF50;
+    border-left-color: #4CAF50;
+}
+
+.status-item.pending {
+    color: #FF9800;
+    border-left-color: #FF9800;
+}
+
+.status-item.failed {
+    color: #f44336;
+    border-left-color: #f44336;
+}
+
+.status-item.ack {
+    color: #4CAF50;
+    border-left-color: #4CAF50;
+}
+
+#eventLog {
+    position: relative;
+    min-height: 100%;
+    padding-bottom: 20px;
+}
+
+.legend {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 15rem;
+    padding: 15px;
+    background-color: rgba(51, 51, 51, 0.5);
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    border: 1px solid #444;
+    z-index: 100;
+}
+
+.legend-title {
+    color: #4CAF50;
+    font-size: 14px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.legend-color {
+    position: relative;
+    width: 25px;
+    height: 20px;
+    margin-right: 10px;
+    border: 1px solid #666;
+    color: black;
+}
+
+.legend-text {
+    color: white;
+    font-size: 12px;
+}
+
+@media (max-width: 1300px) {
+    .legend,
+    .status-window,
+    .controls {
+      width:150px;
+    }
+  }
+  @media (max-width: 1200px) {
+    .legend,
+    .status-window,
+    .controls {
+      width:100px;
+    }
+  }
+  @media (max-width: 1050px) {
+    .legend,
+    .status-window{
+        display:none;
+    }
+    .controls {
+      width:80px;
+    }
+  }

@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Selective Repeat ARQ Visualization</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <!-- <h1>Selective Repeat ARQ Visualization</h1> -->
+    <div style="position: relative; display: inline-block;">
+        <div class="controls">
+            <div>
+                <label for="windowSize">Window Size</label>
+                <input type="number" id="windowSize" value="4" min="1" max="10">
+            </div>
+            <div>
+                <label for="totalPackets">Total Packets</label>
+                <input type="number" id="totalPackets" value="10" min="1" max="20">
+            </div>
+            <div>
+                <label for="timeout">Timeout (ms)</label>
+                <input type="number" id="timeout" value="15000" min="1000" step="500">
+            </div>
+            <div>
+                <label for="lostPackets">Lost Packets</label>
+                <input type="text" id="lostPackets" placeholder="e.g., 2,4,7" value="2,3">
+            </div>
+            <div>
+                <label for="lostAcks">Lost ACKs</label>
+                <input type="text" id="lostAcks" placeholder="e.g., 1,3,5">
+            </div>
+            <div class="button-group">
+                <button id="startBtn" onclick="startSimulation()">Start</button>
+                <button id="resetBtn" onclick="resetSimulation()">Reset</button>
+            </div>
+            <div class="slider-container">
+                <label for="animationSpeed">Animation Speed</label>
+                <input type="range" id="animationSpeed" class="slider" min="1" max="15" value="3">
+            </div>
+        </div>
+        <canvas id="simulationCanvas" width="800" height="700" ></canvas>
+        <div class="status-window" id="statusBar">
+            <div class="status-section">
+                <div class="status-title">Event Log</div>
+                <div id="eventLog"></div>
+            </div>
+            <div class="receiver-section">
+                <div class="status-title">Received Packets</div>
+                <div id="receivedPackets"></div>
+            </div>
+        </div>
+
+    </div>
+    <div class="legend" style="text-align: center;">
+        <div class="legend-title">Legend</div>
+        <div class="legend-item">
+            <div class="legend-color" style="background-color: #FFFFFF;">F</div>
+            <div class="legend-text">Packet in transit (frames)</div>
+        </div>
+        <div class="legend-item" >
+            <div class="legend-color" style="position: relative; " >
+                <span style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); color:white;z-index: 1;opacity: 0.9">F</span>
+                <span style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); color:red; ; z-index: 2;"><span style="font-size: x-large; position: relative; bottom:0">X</span></span>
+            </div>
+            <div class="legend-text">Packet Lost</div>
+        </div>
+        
+        <div class="legend-item">
+            <div class="legend-color" style="background-color: #00ff00;"><span style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); color:white; z-index: 1;opacity: 0.9; font-size: small;">Ack</span></div>
+            <div class="legend-text">Acknowledgement in transit</div>
+        </div>
+        <div class="legend-item">
+            <div class="legend-color" style="background-color: #1e8022;"><span style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); color:white;z-index: 1;opacity: 0.9; font-size: small;">Ack</span></div>
+            <div class="legend-text">Acknowledgement Received</div>
+        </div>
+        <div class="legend-item">
+            <div class="legend-color" style="background-color: rgb(92, 0, 0);color: rgb(253, 0, 0); text-align: center;z-index: 20;"><span style="font-size: x-large; position: relative; bottom:3px">X</span>
+                <span style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); color:white;z-index: 1;opacity:0.7;font-size: small;">Ack</span>
+            </div>
+            <div class="legend-text">Acknowledgement Lost</div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+    <script>
+        // Update button states based on simulation state
+        function updateButtonStates() {
+            const startBtn = document.getElementById('startBtn');
+            const resetBtn = document.getElementById('resetBtn');
+
+            if (visualization.isAnimating) {
+                startBtn.disabled = false;
+                resetBtn.disabled = false;
+
+                // Update start button to be a toggle pause/resume button
+                if (visualization.isPaused) {
+                    startBtn.textContent = 'Resume';
+                    startBtn.style.backgroundColor = '#4CAF50'; // Green for Resume
+                } else {
+                    startBtn.textContent = 'Pause';
+                    startBtn.style.backgroundColor = '#2196F3'; // Blue for Pause
+                }
+            } else {
+                startBtn.disabled = false;
+                resetBtn.disabled = false;
+                startBtn.textContent = 'Start';
+                startBtn.style.backgroundColor = '#4CAF50'; // Green for Start
+            }
+        }
+
+        // Toggle pause/resume
+        function togglePause() {
+            if (visualization.isPaused) {
+                resumeSimulation();
+            } else {
+                pauseSimulation();
+            }
+            updateButtonStates();
+        }
+
+        // Update animation speed when slider changes
+        document.getElementById('animationSpeed').addEventListener('input', function () {
+            const speed = this.value;
+            visualization.animationSpeed = parseInt(speed);
+        });
+
+        // Override the original functions to update button states
+        const originalStartSimulation = startSimulation;
+        startSimulation = function () {
+            if (visualization.isAnimating && !visualization.isPaused) {
+                // If already running, toggle pause
+                pauseSimulation();
+            } else if (visualization.isAnimating && visualization.isPaused) {
+                // If paused, resume
+                resumeSimulation();
+            } else {
+                // If not running, start
+                originalStartSimulation();
+            }
+            updateButtonStates();
+        };
+
+        const originalPauseSimulation = pauseSimulation;
+        pauseSimulation = function () {
+            originalPauseSimulation();
+            updateButtonStates();
+        };
+
+        const originalResumeSimulation = resumeSimulation;
+        resumeSimulation = function () {
+            originalResumeSimulation();
+            updateButtonStates();
+        };
+
+        const originalResetSimulation = resetSimulation;
+        resetSimulation = function () {
+            originalResetSimulation();
+            const eventLogDiv = document.getElementById('eventLog');
+            if (eventLogDiv) {
+                eventLogDiv.innerHTML = '';
+            }
+            // Reset button states
+            const startBtn = document.getElementById('startBtn');
+            startBtn.textContent = 'Start';
+            startBtn.style.backgroundColor = '#4CAF50'; // Green for Start
+            startBtn.disabled = false;
+            updateStatusBar();
+        };
+
+        // Update button states when the page loads
+        window.addEventListener('load', function () {
+            setTimeout(function () {
+                const eventLogDiv = document.getElementById('eventLog');
+                if (eventLogDiv) {
+                    eventLogDiv.innerHTML = '';
+                }
+                updateStatusBar();
+                // Update every 100ms for smoother updates
+                setInterval(updateStatusBar, 100);
+            }, 100);
+        });
+
+        // Status bar update functions
+        function updateStatusBar() {
+            const eventLogDiv = document.getElementById('eventLog');
+            const receivedPacketsDiv = document.getElementById('receivedPackets');
+            if (!eventLogDiv || !receivedPacketsDiv) {
+                console.error('Status divs not found');
+                return;
+            }
+
+            if (!visualization) {
+                console.error('Visualization not found');
+                return;
+            }
+
+            // Update status window height to match canvas
+            const canvas = document.getElementById('simulationCanvas');
+            const statusWindow = document.getElementById('statusBar');
+            
+
+            // Clear all existing messages
+            eventLogDiv.innerHTML = '';
+            receivedPacketsDiv.innerHTML = '';
+
+            // Track received packets
+            const receivedPackets = [];
+
+            // Log status for all packets
+            for (let i = 0; i < visualization.totalPackets; i++) {
+                // Find the packet in the packets array
+                const packet = visualization.packets.find(p => p.seqNum === i);
+
+                // Only show events for packets that have been sent
+                if (packet && packet.status !== 'waiting') {
+                    // Calculate the exact y-position based on the packet's position in the window
+                    const packetHeight = 30; // Height of each packet in the visualization
+                    const baseY = i * packetHeight + 20; // 20px offset from top
+                    const spacing = 10; // Space between messages
+
+                    // Check if this packet is being retransmitted
+                    if (packet.isRetransmitted) {
+                        // Add retransmission message
+                        const retransmitItem = document.createElement('div');
+                        retransmitItem.className = 'status-item pending';
+                        retransmitItem.style.top = `${baseY}px`;
+                        retransmitItem.textContent = `Packet ${i}: Retransmitted`;
+                        eventLogDiv.appendChild(retransmitItem);
+                    } else {
+                        // Show packet sent event
+                        const sentItem = document.createElement('div');
+                        sentItem.className = 'status-item pending';
+                        sentItem.style.top = `${baseY}px`;
+                        sentItem.textContent = `Packet ${i}: Sent`;
+                        eventLogDiv.appendChild(sentItem);
+
+                        // Show packet lost event if applicable
+                        if (packet.status === 'lost') {
+                            const lostItem = document.createElement('div');
+                            lostItem.className = 'status-item failed';
+                            lostItem.style.top = `${baseY + spacing}px`;
+                            lostItem.textContent = `Packet ${i}: Lost`;
+                            eventLogDiv.appendChild(lostItem);
+                        }
+
+                        // Show ACK sent event if packet was received
+                        if (packet.status === 'received') {
+                            const ackSentItem = document.createElement('div');
+                            ackSentItem.className = 'status-item ack';
+                            ackSentItem.style.top = `${baseY + spacing}px`;
+                            ackSentItem.textContent = `ACK ${i}: Sent`;
+                            eventLogDiv.appendChild(ackSentItem);
+
+                            // Add to received packets list
+                            receivedPackets.push(i);
+
+                            // Show ACK lost event if applicable
+                            if (visualization.lostAcks.includes(i)) {
+                                const ackLostItem = document.createElement('div');
+                                ackLostItem.className = 'status-item failed';
+                                ackLostItem.style.top = `${baseY + spacing * 2}px`;
+                                ackLostItem.textContent = `ACK ${i}: Lost`;
+                                eventLogDiv.appendChild(ackLostItem);
+                            }
+                        }
+                    }
+                }
+            }
+
+            // Display received packets
+            if (receivedPackets.length > 0) {
+                const receivedTitle = document.createElement('div');
+                receivedTitle.className = 'status-title';
+                receivedTitle.textContent = 'Received Packets:';
+                receivedPacketsDiv.appendChild(receivedTitle);
+
+                const packetsList = document.createElement('div');
+                packetsList.className = 'status-item success';
+                packetsList.textContent = receivedPackets.join(', ');
+                receivedPacketsDiv.appendChild(packetsList);
+            }
+        }
+
+        // Override the original animation function to update status bar
+        const originalAnimate = visualization.animate;
+        visualization.animate = function () {
+            originalAnimate.call(this);
+            updateStatusBar();
+        };
+
+        // Update status bar when simulation starts
+        const originalStart = visualization.start;
+        visualization.start = function () {
+            originalStart.call(this);
+            updateStatusBar();
+        };
+
+        // Update status bar when simulation resets
+        const originalReset = visualization.reset;
+        visualization.reset = function () {
+            originalReset.call(this);
+            const eventLogDiv = document.getElementById('eventLog');
+            if (eventLogDiv) {
+                eventLogDiv.innerHTML = 'Initializing...';
+            }
+            updateStatusBar();
+        };
+    </script>
+</body>
+
+</html>
