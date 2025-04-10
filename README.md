@@ -16,16 +16,19 @@ The Selective Repeat (SR) Protocol is a sliding window protocol used in computer
 -  **Opeating System:** Microsoft Windows
 -  **Version Control system:** Git / Github
 
-## Steps for installation
+## Steps for installation 
 -  Download Git form https://git-scm.com/downloads
 -  Make a github Account at https://github.com/
 -  Make folder on desktop with name "MY SR APP"
 -  Login to your github account using standard git commands from Git Bash
 -  Clone the Repositiory with the link "https://github.com/chansom63/SR_Protocol_CN_Project.git" to the folder.
--  Click on the MyApp.exe file to run it.
+-  Click on the index.html file to run it.
+  
 ## Alternate .exe installation for windows
-  download the file from the drive and unzip it, https://drive.google.com/file/d/1YW81MhWd6YcUdq25LiCdSGbSd01-Bl4H/view?usp=sharing
+  download the file from the drive and unzip it, 
   run the application
+  The drive link is "https://drive.google.com/file/d/1No7gPdijG-ImznvpMEtHQqPklRasqdqx/view?usp=sharing"
+  
 ```
 Key Advantages:
 +------------------------+
