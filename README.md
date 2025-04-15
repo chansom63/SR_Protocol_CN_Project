@@ -30,7 +30,8 @@ The Selective Repeat (SR) Protocol is a sliding window protocol used in computer
 ## Alternate .exe installation for windows
   download the file from the drive and unzip it, 
   run the application
-  The drive link is "https://drive.google.com/file/d/1No7gPdijG-ImznvpMEtHQqPklRasqdqx/view?usp=sharing"
+  The drive link is "https://drive.google.com/file/d/1No7gPdijG-ImznvpMEtHQqPklRasqdqx/view?usp=sharing".
+  Extract the folder and click on My APP to run the animation.
 
 <br/>
   
